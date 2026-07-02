@@ -10,6 +10,10 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: chat
+    description: AI legal consultation
+  - name: lawyers
+    description: Lawyer directory and matchmaking
 paths:
   /healthz:
     get:
@@ -24,6 +28,107 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /chat:
+    post:
+      operationId: askLegalQuestion
+      tags: [chat]
+      summary: Ask Dharma AI a legal question
+      description: Sends a user question (plus optional conversation history) to the Gemini-backed legal assistant and returns a grounded answer with citations.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChatRequest"
+      responses:
+        "200":
+          description: AI response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChatResponse"
+  /lawyers:
+    get:
+      operationId: listLawyers
+      tags: [lawyers]
+      summary: List verified lawyers
+      description: Returns lawyers from the directory, optionally filtered.
+      parameters:
+        - name: practiceArea
+          in: query
+          schema:
+            type: string
+        - name: city
+          in: query
+          schema:
+            type: string
+        - name: language
+          in: query
+          schema:
+            type: string
+        - name: minExperience
+          in: query
+          schema:
+            type: number
+        - name: maxFee
+          in: query
+          schema:
+            type: number
+        - name: sort
+          in: query
+          schema:
+            type: string
+            enum: [feeAsc, feeDesc, ratingDesc, experienceDesc]
+      responses:
+        "200":
+          description: Lawyer list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LawyerListResponse"
+  /lawyers/{id}:
+    get:
+      operationId: getLawyerById
+      tags: [lawyers]
+      summary: Get a single lawyer profile
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Lawyer profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Lawyer"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /match:
+    post:
+      operationId: matchLawyers
+      tags: [lawyers]
+      summary: AI-powered lawyer matchmaking
+      description: Uses Gemini to analyze a case description and rank the best-fit verified lawyers from MongoDB.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MatchRequest"
+      responses:
+        "200":
+          description: Ranked matches
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MatchResponse"
 components:
   schemas:
     HealthStatus:
@@ -33,4 +138,156 @@ components:
           type: string
       required:
         - status
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+        - message
+    ChatMessage:
+      type: object
+      properties:
+        role:
+          type: string
+          enum: [user, assistant]
+        text:
+          type: string
+      required:
+        - role
+        - text
+    ChatRequest:
+      type: object
+      properties:
+        message:
+          type: string
+        history:
+          type: array
+          items:
+            $ref: "#/components/schemas/ChatMessage"
+        topicContext:
+          type: string
+          description: Optional slug or title of a legal topic the user was reading, used to ground the answer.
+      required:
+        - message
+    ChatResponse:
+      type: object
+      properties:
+        text:
+          type: string
+        suggestedFollowUps:
+          type: array
+          items:
+            type: string
+      required:
+        - text
+        - suggestedFollowUps
+    Lawyer:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        barNumber:
+          type: string
+        location:
+          type: object
+          properties:
+            city:
+              type: string
+            state:
+              type: string
+          required: [city, state]
+        languages:
+          type: array
+          items:
+            type: string
+        experienceYears:
+          type: number
+        practiceAreas:
+          type: array
+          items:
+            type: string
+        hourlyFee:
+          type: number
+        rating:
+          type: number
+        reviewCount:
+          type: number
+        about:
+          type: string
+        notableCases:
+          type: array
+          items:
+            type: string
+        education:
+          type: string
+        verified:
+          type: boolean
+      required:
+        - id
+        - name
+        - barNumber
+        - location
+        - languages
+        - experienceYears
+        - practiceAreas
+        - hourlyFee
+        - rating
+        - reviewCount
+        - about
+        - notableCases
+        - education
+        - verified
+    LawyerListResponse:
+      type: object
+      properties:
+        lawyers:
+          type: array
+          items:
+            $ref: "#/components/schemas/Lawyer"
+        total:
+          type: number
+      required:
+        - lawyers
+        - total
+    MatchRequest:
+      type: object
+      properties:
+        caseText:
+          type: string
+        location:
+          type: string
+        practiceArea:
+          type: string
+        maxBudget:
+          type: number
+        languages:
+          type: array
+          items:
+            type: string
+      required:
+        - caseText
+    RankedLawyer:
+      allOf:
+        - $ref: "#/components/schemas/Lawyer"
+        - type: object
+          properties:
+            matchScore:
+              type: number
+            matchReasoning:
+              type: string
+          required:
+            - matchScore
+            - matchReasoning
+    MatchResponse:
+      type: object
+      properties:
+        matches:
+          type: array
+          items:
+            $ref: "#/components/schemas/RankedLawyer"
+      required:
+        - matches
 

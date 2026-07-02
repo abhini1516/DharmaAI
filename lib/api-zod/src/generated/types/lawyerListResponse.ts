@@ -5,7 +5,9 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { Lawyer } from './lawyer';
 
-export interface HealthStatus {
-  status: string;
+export interface LawyerListResponse {
+  lawyers: Lawyer[];
+  total: number;
 }
