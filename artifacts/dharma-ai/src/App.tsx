@@ -33,11 +33,12 @@ function Router() {
 
 function App() {
   useEffect(() => {
-    // Dynamic URL: Use local port 3001 in development, empty string for relative path in production
-    const isProd = import.meta.env.PROD;
-    const apiUrl = isProd ? "" : `http://${window.location.hostname}:3001`;
+    // Bulletproof evaluation: If running on Render, force an empty string for relative secure paths.
+    // Otherwise, default to local port 3001 for local development.
+    const isRender = window.location.hostname.includes("onrender.com");
+    const apiUrl = isRender ? "" : `http://${window.location.hostname}:3001`;
 
-    console.log("API Base URL:", isProd ? "Production (Relative Path)" : apiUrl);
+    console.log("API Base URL:", isRender ? "Production (Relative Path)" : apiUrl);
 
     setBaseUrl(apiUrl);
   }, []);
