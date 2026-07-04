@@ -13,6 +13,10 @@ export interface LawyerSeedRecord {
   notableCases: string[];
   education: string;
   verified: boolean;
+  contact: {
+    phone: string;
+    email: string;
+  };
 }
 
 export const lawyerSeed: LawyerSeedRecord[] = [
@@ -34,6 +38,10 @@ export const lawyerSeed: LawyerSeedRecord[] = [
     ],
     education: "LL.B, Faculty of Law, Delhi University; LL.M, Cambridge University",
     verified: true,
+    contact: {
+      phone: "+91-11-4141-4141",
+      email: "vikram.desai@dharmaai.legal"
+    },
   },
   {
     id: "l2",
@@ -53,6 +61,10 @@ export const lawyerSeed: LawyerSeedRecord[] = [
     ],
     education: "B.A. LL.B (Hons.), NLSIU Bengaluru",
     verified: true,
+    contact: {
+      phone: "+91-80-4141-4242",
+      email: "priya.natarajan@dharmaai.legal"
+    },
   },
   {
     id: "l3",
@@ -72,6 +84,10 @@ export const lawyerSeed: LawyerSeedRecord[] = [
     ],
     education: "LL.B, Government Law College, Mumbai",
     verified: true,
+    contact: {
+      phone: "+91-22-6141-4343",
+      email: "rohan.mehra@dharmaai.legal"
+    },
   },
   {
     id: "l4",
@@ -91,6 +107,10 @@ export const lawyerSeed: LawyerSeedRecord[] = [
     ],
     education: "LL.B, Madras Law College",
     verified: true,
+    contact: {
+      phone: "+91-44-4141-4444",
+      email: "meenakshi.iyer@dharmaai.legal"
+    },
   },
   {
     id: "l5",
@@ -107,6 +127,10 @@ export const lawyerSeed: LawyerSeedRecord[] = [
     notableCases: ["Secured record compensation in Highway 44 accident tribunal (2021)"],
     education: "LL.B, Panjab University",
     verified: true,
+    contact: {
+      phone: "+91-172-4141-5555",
+      email: "kabir.singh@dharmaai.legal"
+    },
   },
   {
     id: "l6",
@@ -119,6 +143,10 @@ export const lawyerSeed: LawyerSeedRecord[] = [
     hourlyFee: 1500,
     rating: 4.6,
     reviewCount: 42,
+    contact: {
+      phone: "+91-11-4141-6666",
+      email: "ananya.sharma@dharmaai.legal"
+    },
     about: "Modern lawyer focusing purely on e-commerce and digital consumer rights. Navigates e-Daakhil with ease to get quick resolutions for online shopping fraud.",
     notableCases: ["Resolved over 50+ cases of e-commerce delivery fraud through mediation"],
     education: "B.B.A LL.B, Symbiosis Law School",
@@ -135,6 +163,10 @@ export const lawyerSeed: LawyerSeedRecord[] = [
     hourlyFee: 3000,
     rating: 4.7,
     reviewCount: 108,
+    contact: {
+      phone: "+91-484-4141-7777",
+      email: "arjun.nair@dharmaai.legal"
+    },
     about: "Handles cybercrime prosecutions and defense with equal rigor. Frequently consulted on IT Act interpretation by regional police cyber cells.",
     notableCases: ["Kerala High Court precedent on Section 66E evidentiary standards (2020)"],
     education: "LL.B, Government Law College, Ernakulam",
@@ -151,6 +183,10 @@ export const lawyerSeed: LawyerSeedRecord[] = [
     hourlyFee: 3200,
     rating: 4.8,
     reviewCount: 156,
+    contact: {
+      phone: "+91-33-4141-8888",
+      email: "ishita.bose@dharmaai.legal"
+    },
     about: "Combines constitutional advocacy with sensitive family law practice, particularly in matrimonial and custody disputes involving fundamental rights arguments.",
     notableCases: ["Bose v. State of WB (2019) - Article 21 applied to custody proceedings"],
     education: "LL.B, University of Calcutta",
@@ -163,6 +199,10 @@ export const lawyerSeed: LawyerSeedRecord[] = [
     location: { city: "New Delhi", state: "Delhi" },
     languages: ["English", "Hindi"],
     experienceYears: 12,
+    contact: {
+      phone: "+91-11-4141-9999",
+      email: "devansh.kapoor@dharmaai.legal"
+    },
     practiceAreas: ["Motor Accidents", "Civil Litigation", "Insurance Claims"],
     hourlyFee: 2200,
     rating: 4.6,
@@ -179,6 +219,10 @@ export const lawyerSeed: LawyerSeedRecord[] = [
     location: { city: "Mumbai", state: "Maharashtra" },
     languages: ["English", "Hindi", "Urdu", "Marathi"],
     experienceYears: 9,
+    contact: {
+      phone: "+91-22-6141-1010",
+      email: "fatima.sheikh@dharmaai.legal"
+    },
     practiceAreas: ["Data Protection", "Corporate Law", "Cyber Law"],
     hourlyFee: 2800,
     rating: 4.7,
@@ -195,6 +239,10 @@ export const lawyerSeed: LawyerSeedRecord[] = [
     location: { city: "Bengaluru", state: "Karnataka" },
     languages: ["English", "Kannada"],
     experienceYears: 23,
+    contact: {
+      phone: "+91-80-4141-1111",
+      email: "rajesh.iyengar@dharmaai.legal"
+    },
     practiceAreas: ["Criminal Defense", "Constitutional Law"],
     hourlyFee: 5500,
     rating: 4.9,
@@ -207,6 +255,10 @@ export const lawyerSeed: LawyerSeedRecord[] = [
   {
     id: "l12",
     name: "Adv. Neha Verma",
+    contact: {
+      phone: "+91-522-4141-1212",
+      email: "neha.verma@dharmaai.legal"
+    },
     barNumber: "UP/2988/2014",
     location: { city: "Lucknow", state: "Uttar Pradesh" },
     languages: ["English", "Hindi"],
@@ -223,6 +275,10 @@ export const lawyerSeed: LawyerSeedRecord[] = [
   {
     id: "l13",
     name: "Adv. Siddharth Rao",
+    contact: {
+      phone: "+91-40-4141-1313",
+      email: "siddharth.rao@dharmaai.legal"
+    },
     barNumber: "TEL/1789/2007",
     location: { city: "Hyderabad", state: "Telangana" },
     languages: ["English", "Telugu", "Hindi"],
@@ -239,6 +295,10 @@ export const lawyerSeed: LawyerSeedRecord[] = [
   {
     id: "l14",
     name: "Adv. Pooja Malhotra",
+    contact: {
+      phone: "+91-11-4141-1414",
+      email: "pooja.malhotra@dharmaai.legal"
+    },
     barNumber: "D/4210/2019",
     location: { city: "New Delhi", state: "Delhi" },
     languages: ["English", "Hindi"],
@@ -255,6 +315,10 @@ export const lawyerSeed: LawyerSeedRecord[] = [
   {
     id: "l15",
     name: "Adv. Karthik Subramaniam",
+    contact: {
+      phone: "+91-44-4141-1515",
+      email: "karthik.subramaniam@dharmaai.legal"
+    },
     barNumber: "TN/2456/2010",
     location: { city: "Chennai", state: "Tamil Nadu" },
     languages: ["English", "Tamil", "Hindi"],
@@ -275,6 +339,10 @@ export const lawyerSeed: LawyerSeedRecord[] = [
     location: { city: "Pune", state: "Maharashtra" },
     languages: ["English", "Hindi", "Marathi", "Gujarati"],
     experienceYears: 19,
+    contact: {
+      phone: "+91-20-4141-1616",
+      email: "sanya.kapadia@dharmaai.legal"
+    },
     practiceAreas: ["Constitutional Law", "Public Interest Litigation", "Civil Rights"],
     hourlyFee: 4200,
     rating: 4.9,
@@ -299,6 +367,10 @@ export const lawyerSeed: LawyerSeedRecord[] = [
     notableCases: ["Secured acquittal under BNS Section 106 in vehicular negligence trial"],
     education: "LL.B, University of Rajasthan",
     verified: true,
+    contact: {
+      phone: "+91-141-4141-1717",
+      email: "harshvardhan.chauhan@dharmaai.legal"
+    },
   },
   {
     id: "l18",
@@ -315,6 +387,10 @@ export const lawyerSeed: LawyerSeedRecord[] = [
     notableCases: ["Fast-tracked conviction in Section 66E harassment case (2022)"],
     education: "LL.B, National University of Juridical Sciences, Kolkata",
     verified: true,
+    contact: {
+      phone: "+91-33-4141-1818",
+      email: "ritu.ghosh@dharmaai.legal"
+    },
   },
   {
     id: "l19",
@@ -331,6 +407,10 @@ export const lawyerSeed: LawyerSeedRecord[] = [
     notableCases: ["Lead counsel in a Supreme Court corporate governance reference (2015)"],
     education: "LL.B, Government Law College, Mumbai; LL.M, Harvard Law School",
     verified: true,
+    contact: {
+      phone: "+91-22-6141-1919",
+      email: "omkar.deshpande@dharmaai.legal"
+    },
   },
   {
     id: "l20",
@@ -347,5 +427,9 @@ export const lawyerSeed: LawyerSeedRecord[] = [
     notableCases: ["Resolved a class complaint against a major appliance retailer (2023)"],
     education: "LL.B, Gujarat National Law University",
     verified: true,
+    contact: {
+      phone: "+91-79-4141-2020",
+      email: "tanvi.joshi@dharmaai.legal"
+    },
   },
 ];

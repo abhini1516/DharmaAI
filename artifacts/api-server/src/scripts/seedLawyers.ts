@@ -1,3 +1,4 @@
+import "../lib/env";
 import { getLawyersCollection } from "../lib/mongo";
 import { lawyerSeed } from "../data/lawyerSeed";
 import { logger } from "../lib/logger";

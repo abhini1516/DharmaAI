@@ -10,7 +10,7 @@ const genAI = new GoogleGenerativeAI(apiKey);
 
 export function getGeminiModel(responseMimeType?: "application/json") {
   return genAI.getGenerativeModel({
-    model: "gemini-2.5-flash-lite",
+    model: "gemini-2.0-flash",
     generationConfig: responseMimeType ? { responseMimeType } : undefined,
   });
 }

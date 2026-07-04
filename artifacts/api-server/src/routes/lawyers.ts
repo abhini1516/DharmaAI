@@ -8,7 +8,7 @@ import {
   MatchLawyersResponse,
 } from "@workspace/api-zod";
 import { getLawyersCollection } from "../lib/mongo";
-import { getGeminiModel } from "../lib/gemini";
+import { getOpenRouterModel, OPENROUTER_FREE_MODEL } from "../lib/openrouter";
 
 const router: IRouter = Router();
 
@@ -97,15 +97,22 @@ Respond ONLY with valid JSON in this exact shape, no markdown fences:
 {"matches": [{"index": 0, "matchScore": 94, "matchReasoning": "..."}]}`;
 
   try {
-    const model = getGeminiModel("application/json");
-    const result = await model.generateContent(prompt);
-    const raw = result.response.text();
+    const completion = await getOpenRouterModel().create({
+      model: OPENROUTER_FREE_MODEL,
+      messages: [
+        { role: "user", content: prompt }
+      ],
+      temperature: 0.7,
+      max_tokens: 1024,
+    });
+
+    const raw = completion.choices[0]?.message?.content || "";
 
     let parsed: { matches?: { index: number; matchScore: number; matchReasoning: string }[] };
     try {
       parsed = JSON.parse(raw);
     } catch {
-      req.log.warn({ raw }, "Gemini returned non-JSON match response");
+      req.log.warn({ raw }, "OpenRouter returned non-JSON match response");
       parsed = { matches: [] };
     }
 
@@ -120,7 +127,7 @@ Respond ONLY with valid JSON in this exact shape, no markdown fences:
     const data = MatchLawyersResponse.parse({ matches: ranked });
     res.json(data);
   } catch (err) {
-    req.log.error({ err }, "Gemini match request failed");
+    req.log.error({ err }, "OpenRouter match request failed");
     res.status(502).json({ message: "The AI matchmaking engine is temporarily unavailable. Please try again." });
   }
 });

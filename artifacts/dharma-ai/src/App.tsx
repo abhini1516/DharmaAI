@@ -1,5 +1,7 @@
+import { useEffect } from "react";
 import { Switch, Route, Router as WouterRouter } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { setBaseUrl } from "@workspace/api-client-react";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
@@ -30,6 +32,15 @@ function Router() {
 }
 
 function App() {
+  useEffect(() => {
+    // Always use the backend running on port 3001
+    const apiUrl = `http://${window.location.hostname}:3001`;
+
+    console.log("API Base URL:", apiUrl);
+
+    setBaseUrl(apiUrl);
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>

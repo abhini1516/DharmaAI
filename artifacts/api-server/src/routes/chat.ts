@@ -1,6 +1,6 @@
 import { Router, type IRouter } from "express";
 import { AskLegalQuestionBody, AskLegalQuestionResponse } from "@workspace/api-zod";
-import { getGeminiModel } from "../lib/gemini";
+import { getOpenRouterModel, OPENROUTER_FREE_MODEL } from "../lib/openrouter";
 import { citationReferenceForPrompt } from "../data/citations";
 
 const router: IRouter = Router();
@@ -37,15 +37,22 @@ ${history ? `Conversation so far:\n${history}\n\n` : ""}Citizen's new question: 
 Respond with the JSON now.`;
 
   try {
-    const model = getGeminiModel("application/json");
-    const result = await model.generateContent(prompt);
-    const raw = result.response.text();
+    const completion = await getOpenRouterModel().create({
+      model: OPENROUTER_FREE_MODEL,
+      messages: [
+        { role: "user", content: prompt }
+      ],
+      temperature: 0.7,
+      max_tokens: 1024,
+    });
+
+    const raw = completion.choices[0]?.message?.content || "";
 
     let parsed: { text?: string; suggestedFollowUps?: string[] };
     try {
       parsed = JSON.parse(raw);
     } catch {
-      req.log.warn({ raw }, "Gemini returned non-JSON response, falling back to raw text");
+      req.log.warn({ raw }, "OpenRouter returned non-JSON response, falling back to raw text");
       parsed = { text: raw, suggestedFollowUps: [] };
     }
 
@@ -56,7 +63,7 @@ Respond with the JSON now.`;
 
     res.json(data);
   } catch (err) {
-    req.log.error({ err }, "Gemini chat request failed");
+    req.log.error({ err }, "OpenRouter chat request failed");
     res.status(502).json({ message: "The AI legal assistant is temporarily unavailable. Please try again." });
   }
 });

@@ -1,49 +1,87 @@
-# See https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
+# ==========================================
+# Environment Variables (DO NOT COMMIT)
+# ==========================================
+.env
+.env.*
+!.env.example
 
-# compiled output
-dist
-tmp
-out-tsc
+# ==========================================
+# Dependencies
+# ==========================================
+node_modules/
+.pnpm-store/
+
+# ==========================================
+# Build Output
+# ==========================================
+dist/
+build/
+coverage/
+tmp/
+out-tsc/
 *.tsbuildinfo
-.expo
-.expo-shared
 
-# dependencies
-node_modules
+# ==========================================
+# Logs
+# ==========================================
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+testem.log
 
-# IDEs and editors
-/.idea
-.project
-.classpath
-.c9/
-*.launch
-.settings/
-*.sublime-workspace
-
-# IDE - VSCode
+# ==========================================
+# IDEs & Editors
+# ==========================================
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
 
-# misc
-/.sass-cache
-/connect.lock
-/coverage
-/libpeerconnection.log
-npm-debug.log
-yarn-error.log
-testem.log
-/typings
+.idea/
+.project
+.classpath
+.settings/
+.c9/
+*.launch
+*.sublime-workspace
 
-# System Files
+# ==========================================
+# OS Files
+# ==========================================
 .DS_Store
 Thumbs.db
 
-.cursor/rules/nx-rules.mdc
-.github/instructions/nx.instructions.md
-
-# Replit
+# ==========================================
+# Cache
+# ==========================================
 .cache/
 .local/
+.sass-cache/
+
+# ==========================================
+# Expo
+# ==========================================
+.expo/
+.expo-shared/
+
+# ==========================================
+# Misc
+# ==========================================
+connect.lock
+libpeerconnection.log
+typings/
+
+# ==========================================
+# Cursor
+# ==========================================
+.cursor/
+.github/instructions/
+
+# ==========================================
+# Temporary Files
+# ==========================================
+*.tmp
+*.temp
