@@ -1,8 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Layout } from "@/components/Layout";
-import { matchLawyers, RankedLawyer, MatchFilter } from "@/lib/mock/services/match";
+import { useMatchLawyers } from "@workspace/api-client-react";
+import type { RankedLawyer } from "@workspace/api-zod";
 import { LawyerCard } from "@/components/LawyerCard";
 import { Sparkles, ArrowRight, ArrowLeft, CheckCircle2, Loader2, Database, Network } from "lucide-react";
+
+interface MatchFilter {
+  location: string;
+  maxBudget: number;
+}
 
 export default function MatchWizard() {
   const [step, setStep] = useState(1);
@@ -15,6 +21,7 @@ export default function MatchWizard() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [loadingMsg, setLoadingMsg] = useState("");
   const [results, setResults] = useState<RankedLawyer[]>([]);
+  const matchMutation = useMatchLawyers();
 
   const handleNext = () => {
     if (step === 1 && !caseDescription.trim()) return;
@@ -34,13 +41,28 @@ export default function MatchWizard() {
       "Ranking candidates by semantic relevance score..."
     ];
 
-    for (let i = 0; i < steps.length; i++) {
-      setLoadingMsg(steps[i]);
-      await new Promise(r => setTimeout(r, 800));
-    }
+    const stepPromise = (async () => {
+      for (let i = 0; i < steps.length; i++) {
+        setLoadingMsg(steps[i]);
+        await new Promise(r => setTimeout(r, 800));
+      }
+    })();
 
-    const matches = await matchLawyers(caseDescription, filters);
-    setResults(matches);
+    try {
+      const [response] = await Promise.all([
+        matchMutation.mutateAsync({
+          data: {
+            caseText: caseDescription,
+            location: filters.location,
+            maxBudget: filters.maxBudget,
+          },
+        }),
+        stepPromise,
+      ]);
+      setResults(response.matches);
+    } catch {
+      setResults([]);
+    }
     setIsProcessing(false);
   };
 

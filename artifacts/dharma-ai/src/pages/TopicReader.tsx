@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "wouter";
 import { Layout } from "@/components/Layout";
 import { topics, Topic } from "@/lib/mock/topics";
-import { lawyers, Lawyer } from "@/lib/mock/lawyers";
+import { useListLawyers } from "@workspace/api-client-react";
+import type { Lawyer } from "@workspace/api-zod";
 import { CitationChip } from "@/components/CitationChip";
 import { LawyerCard } from "@/components/LawyerCard";
 import { Sparkles, ArrowLeft, ChevronDown } from "lucide-react";
@@ -16,35 +17,27 @@ import {
 export default function TopicReader() {
   const params = useParams<{ topicSlug: string }>();
   const [topic, setTopic] = useState<Topic | null>(null);
-  const [matchedLawyers, setMatchedLawyers] = useState<Lawyer[]>([]);
   const [loading, setLoading] = useState(true);
+  const { data: lawyersData } = useListLawyers();
+  const lawyers = lawyersData?.lawyers ?? [];
 
   useEffect(() => {
-    const loadData = async () => {
-      setLoading(true);
-      // Simulate network
-      await new Promise(r => setTimeout(r, 600));
-      
-      const found = topics.find(t => t.slug === params.topicSlug);
-      if (found) {
-        setTopic(found);
-        
-        // Find a couple related lawyers based on topic domain/title keywords
-        const keywords = found.title.split(' ').concat(found.domain.split(' '));
-        const matched = lawyers.filter(l => 
-          l.practiceAreas.some(pa => 
+    const found = topics.find(t => t.slug === params.topicSlug);
+    setTopic(found ?? null);
+    setLoading(false);
+  }, [params.topicSlug]);
+
+  const matchedLawyers: Lawyer[] = topic
+    ? (() => {
+        const keywords = topic.title.split(' ').concat(topic.domain.split(' '));
+        const matched = lawyers.filter(l =>
+          l.practiceAreas.some(pa =>
             keywords.some(kw => kw.length > 3 && pa.toLowerCase().includes(kw.toLowerCase()))
           )
         ).slice(0, 2);
-        
-        // Fallback to random if no keyword match
-        setMatchedLawyers(matched.length > 0 ? matched : lawyers.slice(0, 2));
-      }
-      setLoading(false);
-    };
-    
-    loadData();
-  }, [params.topicSlug]);
+        return matched.length > 0 ? matched : lawyers.slice(0, 2);
+      })()
+    : [];
 
   if (loading) {
     return (

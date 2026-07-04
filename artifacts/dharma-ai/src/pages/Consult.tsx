@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useLocation } from "wouter";
 import { Layout } from "@/components/Layout";
-import { askLegalQuestion } from "@/lib/mock/services/ai";
+import { useAskLegalQuestion } from "@workspace/api-client-react";
 import { CitationChip } from "@/components/CitationChip";
 import { Sparkles, Send, User, Bot, Loader2 } from "lucide-react";
 
@@ -29,6 +29,8 @@ export default function Consult() {
   ]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [, setLocation] = useLocation();
+  const [topicContext, setTopicContext] = useState<string | undefined>(undefined);
+  const askQuestion = useAskLegalQuestion();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -43,7 +45,9 @@ export default function Consult() {
     const params = new URLSearchParams(window.location.search);
     const topic = params.get('topic');
     if (topic && messages.length === 1) {
-      setInput(`I have a question regarding ${topic.replace(/-/g, ' ')}...`);
+      const readable = topic.replace(/-/g, ' ');
+      setInput(`I have a question regarding ${readable}...`);
+      setTopicContext(readable);
     }
   }, []);
 
@@ -63,8 +67,14 @@ export default function Consult() {
     setIsTyping(true);
 
     try {
-      const response = await askLegalQuestion(text);
-      
+      const history = messages
+        .filter(m => m.content)
+        .map(m => ({ role: m.role === "user" ? ("user" as const) : ("assistant" as const), text: m.content }));
+
+      const response = await askQuestion.mutateAsync({
+        data: { message: text, history, topicContext },
+      });
+
       // Simulate streaming by creating a placeholder and updating it
       const aiMsgId = (Date.now() + 1).toString();
       setMessages(prev => [...prev, { id: aiMsgId, role: "ai", content: "", streaming: true }]);
@@ -90,10 +100,11 @@ export default function Consult() {
 
     } catch (error) {
       setIsTyping(false);
+      const message = error instanceof Error ? error.message : "Please try again.";
       setMessages(prev => [...prev, { 
         id: Date.now().toString(), 
         role: "ai", 
-        content: "I apologize, but I encountered an error accessing the statutory database. Please try again." 
+        content: `I apologize, but I encountered an error reaching the AI legal assistant. ${message}` 
       }]);
     }
   };

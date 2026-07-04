@@ -1,22 +1,11 @@
-import { useEffect, useState } from "react";
 import { useParams, Link } from "wouter";
 import { Layout } from "@/components/Layout";
-import { lawyers, Lawyer } from "@/lib/mock/lawyers";
+import { useGetLawyerById } from "@workspace/api-client-react";
 import { ArrowLeft, ShieldCheck, MapPin, Languages, Scale, BookOpen, Star, Mail, Phone, Calendar, Gavel } from "lucide-react";
 
 export default function LawyerProfile() {
   const params = useParams<{ id: string }>();
-  const [lawyer, setLawyer] = useState<Lawyer | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    // Simulate loading
-    setTimeout(() => {
-      const found = lawyers.find(l => l.id === params.id);
-      setLawyer(found || null);
-      setLoading(false);
-    }, 400);
-  }, [params.id]);
+  const { data: lawyer, isLoading: loading } = useGetLawyerById(params.id ?? "");
 
   if (loading) {
     return (

@@ -1,26 +1,29 @@
 import { useState, useMemo } from "react";
 import { Layout } from "@/components/Layout";
-import { lawyers } from "@/lib/mock/lawyers";
+import { useListLawyers } from "@workspace/api-client-react";
 import { LawyerCard } from "@/components/LawyerCard";
-import { Search, Filter, SlidersHorizontal } from "lucide-react";
+import { Search, Filter, SlidersHorizontal, Loader2 } from "lucide-react";
 
 export default function Directory() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedPracticeArea, setSelectedPracticeArea] = useState<string>("All");
   const [selectedLocation, setSelectedLocation] = useState<string>("All");
-  
+
+  const { data, isLoading, isError } = useListLawyers();
+  const lawyers = data?.lawyers ?? [];
+
   // Extract unique filter options
   const practiceAreas = useMemo(() => {
     const areas = new Set<string>();
     lawyers.forEach(l => l.practiceAreas.forEach(a => areas.add(a)));
     return ["All", ...Array.from(areas).sort()];
-  }, []);
+  }, [lawyers]);
 
   const locations = useMemo(() => {
     const locs = new Set<string>();
     lawyers.forEach(l => locs.add(l.location.city));
     return ["All", ...Array.from(locs).sort()];
-  }, []);
+  }, [lawyers]);
 
   // Filter lawyers
   const filteredLawyers = useMemo(() => {
@@ -32,7 +35,7 @@ export default function Directory() {
       
       return matchesSearch && matchesPractice && matchesLocation;
     });
-  }, [searchTerm, selectedPracticeArea, selectedLocation]);
+  }, [lawyers, searchTerm, selectedPracticeArea, selectedLocation]);
 
   return (
     <Layout>
@@ -114,7 +117,16 @@ export default function Directory() {
             Showing <span className="font-bold text-foreground">{filteredLawyers.length}</span> verified practitioners
           </div>
 
-          {filteredLawyers.length === 0 ? (
+          {isLoading ? (
+            <div className="text-center py-20 bg-card border border-border rounded-sm flex flex-col items-center gap-3">
+              <Loader2 className="w-6 h-6 animate-spin text-primary" />
+              <p className="font-sans text-muted-foreground text-sm">Loading verified practitioners...</p>
+            </div>
+          ) : isError ? (
+            <div className="text-center py-20 bg-card border border-border rounded-sm">
+              <p className="font-sans text-muted-foreground text-sm">Could not load the lawyer directory. Please try again shortly.</p>
+            </div>
+          ) : filteredLawyers.length === 0 ? (
             <div className="text-center py-20 bg-card border border-border rounded-sm">
               <Search className="w-10 h-10 text-muted-foreground mx-auto mb-4 opacity-20" />
               <h3 className="font-display font-bold text-xl mb-2">No profiles found</h3>

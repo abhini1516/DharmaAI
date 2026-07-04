@@ -2,12 +2,13 @@ import { Layout } from "@/components/Layout";
 import { Link } from "wouter";
 import { Search, Book, Scale, ArrowRight, Sparkles, UserCheck } from "lucide-react";
 import { topics } from "@/lib/mock/topics";
-import { lawyers } from "@/lib/mock/lawyers";
+import { useListLawyers } from "@workspace/api-client-react";
 import { LawyerCard } from "@/components/LawyerCard";
 
 export default function Home() {
   const featuredTopics = topics.slice(0, 3);
-  const featuredLawyer = lawyers[0];
+  const { data: lawyersData } = useListLawyers();
+  const featuredLawyer = lawyersData?.lawyers?.[0];
 
   return (
     <Layout>
@@ -92,25 +93,27 @@ export default function Home() {
             
             <div className="order-2 lg:order-1 relative">
               <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent blur-3xl -z-10 rounded-full"></div>
-              <div className="bg-card border border-border rounded-sm shadow-xl p-6 md:p-8 relative">
-                <div className="absolute -top-4 -left-4 bg-primary text-primary-foreground px-4 py-1.5 font-sans text-sm font-bold tracking-wide uppercase rounded-sm shadow-md">
-                  Case Match 98%
-                </div>
-                <div className="mt-4">
-                  <LawyerCard lawyer={featuredLawyer} isMatch={false} />
-                </div>
-                
-                <div className="mt-6 border-t border-border pt-6">
-                  <h4 className="font-sans font-bold text-sm uppercase text-muted-foreground mb-4 flex items-center gap-2">
-                    <Scale className="w-4 h-4" />
-                    Vector-RAG Analysis
-                  </h4>
-                  <div className="bg-background border border-border p-4 rounded-sm font-sans text-sm leading-relaxed text-foreground border-l-4 border-l-primary">
-                    <span className="font-bold mr-2">Jurisprudential Alignment:</span>
-                    Adv. {featuredLawyer.name.split(' ')[1]}'s extensive precedent in Constitutional Law and public interest litigation strongly matches the statutory requirements of your inquiry regarding Article 21 violations.
+              {featuredLawyer && (
+                <div className="bg-card border border-border rounded-sm shadow-xl p-6 md:p-8 relative">
+                  <div className="absolute -top-4 -left-4 bg-primary text-primary-foreground px-4 py-1.5 font-sans text-sm font-bold tracking-wide uppercase rounded-sm shadow-md">
+                    Case Match 98%
+                  </div>
+                  <div className="mt-4">
+                    <LawyerCard lawyer={featuredLawyer} isMatch={false} />
+                  </div>
+                  
+                  <div className="mt-6 border-t border-border pt-6">
+                    <h4 className="font-sans font-bold text-sm uppercase text-muted-foreground mb-4 flex items-center gap-2">
+                      <Scale className="w-4 h-4" />
+                      Vector-RAG Analysis
+                    </h4>
+                    <div className="bg-background border border-border p-4 rounded-sm font-sans text-sm leading-relaxed text-foreground border-l-4 border-l-primary">
+                      <span className="font-bold mr-2">Jurisprudential Alignment:</span>
+                      Adv. {featuredLawyer.name.split(' ')[1]}'s extensive precedent in Constitutional Law and public interest litigation strongly matches the statutory requirements of your inquiry regarding Article 21 violations.
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
 
             <div className="order-1 lg:order-2 space-y-8">

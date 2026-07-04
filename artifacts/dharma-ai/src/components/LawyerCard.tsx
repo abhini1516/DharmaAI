@@ -1,7 +1,6 @@
-import { Lawyer } from "@/lib/mock/lawyers";
+import type { Lawyer, RankedLawyer } from "@workspace/api-zod";
 import { Link } from "wouter";
 import { MapPin, ShieldCheck, Star, Award, Gavel } from "lucide-react";
-import { RankedLawyer } from "@/lib/mock/services/match";
 
 interface LawyerCardProps {
   lawyer: Lawyer | RankedLawyer;
@@ -52,7 +51,7 @@ export function LawyerCard({ lawyer, isMatch = false }: LawyerCardProps) {
           </div>
           
           <div className="flex flex-wrap gap-1.5">
-            {lawyer.practiceAreas.slice(0, 3).map(area => (
+            {lawyer.practiceAreas.slice(0, 3).map((area: string) => (
               <span key={area} className="inline-flex items-center px-2 py-0.5 rounded-sm bg-muted text-muted-foreground border border-border font-sans text-xs">
                 <Gavel className="w-3 h-3 mr-1" />
                 {area}

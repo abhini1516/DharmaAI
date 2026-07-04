@@ -1,0 +1,1 @@
+- [Gemini API key model quota](gemini-model-quota.md) — a key can have 0 free-tier quota for one model (e.g. gemini-2.0-flash) while another (e.g. gemini-2.5-flash) works; check `/v1beta/models?key=` before assuming a code bug.
