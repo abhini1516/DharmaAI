@@ -16,7 +16,7 @@ An Indian legal literacy and AI lawyer-matchmaking platform: citizens ask plain-
 - pnpm workspaces, Node.js 24, TypeScript 5.9
 - API: Express 5
 - DB: MongoDB (lawyer directory) — chosen over the default Postgres/Drizzle per explicit user request
-- AI: Google Gemini (`gemini-2.5-flash`) for chat answers and AI lawyer-match ranking
+- AI: Google Gemini (`gemini-2.5-flash-lite`) for chat answers and AI lawyer-match ranking
 - Validation: Zod (`zod/v4`)
 - API codegen: Orval (from OpenAPI spec)
 - Build: esbuild (ESM bundle)
@@ -36,7 +36,7 @@ An Indian legal literacy and AI lawyer-matchmaking platform: citizens ask plain-
 
 - Lawyer data lives in MongoDB (not the workspace default Postgres/Drizzle) per explicit user request.
 - Chat and match both use Gemini directly per-request (no caching/precomputed answers) so responses always reflect the actual question/case text — this was the fix for the original bug where the frontend called hardcoded mock functions.
-- `gemini-2.5-flash` is used instead of `gemini-2.0-flash`; some API keys have zero free-tier quota for `gemini-2.0-flash` specifically even though other models work — see `.agents/memory/gemini-model-quota.md`.
+- `gemini-2.5-flash-lite` is used (not `gemini-2.0-flash`/`gemini-2.0-flash-lite`, both of which returned 0 free-tier quota on this key); `-lite` models are Google's dedicated free-tier-friendly tier — see `.agents/memory/gemini-model-quota.md`.
 
 ## Product
 

@@ -9,5 +9,6 @@ If Gemini calls fail with a 429 `Quota exceeded ... limit: 0` for a specific mod
 
 **How to apply:**
 - Diagnose with `curl "https://generativelanguage.googleapis.com/v1beta/models?key=$KEY"` to list models the key can actually access.
-- Try swapping to another available model from that list (e.g. `gemini-2.5-flash` instead of `gemini-2.0-flash`) — often resolves it immediately since quota differs per model.
+- Try swapping to another available model from that list — often resolves it immediately since quota differs per model.
 - Don't assume the integration code is broken just because one specific model name 429s; verify against the models list first.
+- Observed on one key: `gemini-2.0-flash` and `gemini-2.0-flash-lite` both returned `limit: 0`, while `gemini-2.5-flash` and `gemini-2.5-flash-lite` worked. `-lite` variants are Google's dedicated always-free-tier models when quota permits — prefer `gemini-2.5-flash-lite` as the default "always free" choice, and fall back to testing other models via the same curl check if it ever quotas out.
