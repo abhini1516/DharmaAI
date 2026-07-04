@@ -33,10 +33,11 @@ function Router() {
 
 function App() {
   useEffect(() => {
-    // Always use the backend running on port 3001
-    const apiUrl = `http://${window.location.hostname}:3001`;
+    // Dynamic URL: Use local port 3001 in development, empty string for relative path in production
+    const isProd = import.meta.env.PROD;
+    const apiUrl = isProd ? "" : `http://${window.location.hostname}:3001`;
 
-    console.log("API Base URL:", apiUrl);
+    console.log("API Base URL:", isProd ? "Production (Relative Path)" : apiUrl);
 
     setBaseUrl(apiUrl);
   }, []);
